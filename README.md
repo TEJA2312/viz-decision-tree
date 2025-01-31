@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+## Run this decision tree module
+`npm install`
+`npm start`
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How to deploy
 
-## Available Scripts
+To host a React app on an **AWS S3 bucket** using the **build** folder, follow these steps:
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### **Step 1: Build the React App**
+Run the following command in your React project directory to generate the production-ready build:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```sh
+npm run build
+```
+or if using Yarn:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```sh
+yarn build
+```
 
-### `npm test`
+This will create a `build/` folder with optimized static files.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+### **Step 2: Create an S3 Bucket**
+1. Log in to **AWS Management Console**.
+2. Go to **S3** and click **Create Bucket**.
+3. Provide a **unique bucket name** (e.g., `my-react-app`).
+4. Choose a region (e.g., `us-east-1`).
+5. **Uncheck "Block all public access"** (to make it publicly accessible).
+6. Click **Create bucket**.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### **Step 3: Enable Static Website Hosting**
+1. Open the created bucket.
+2. Go to the **Properties** tab.
+3. Scroll down to **Static website hosting**.
+4. Select **Enable**.
+5. Choose **"Host a static website"**.
+6. Set **Index document** to `index.html`.
+7. (Optional) Set **Error document** to `index.html` (useful for React Router).
+8. Copy the **Bucket website endpoint**—you'll need it later.
+9. Click **Save**.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### **Step 4: Upload the Build Files**
+1. Navigate to the **Objects** tab in your S3 bucket.
+2. Click **Upload**.
+3. Select all files inside the `build/` folder.
+4. Click **Upload**.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### **Step 5: Set Bucket Policy for Public Access**
+1. Go to the **Permissions** tab.
+2. Under **Bucket Policy**, click **Edit** and add the following policy:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    }
+  ]
+}
+```
+Replace `your-bucket-name` with the actual name of your S3 bucket.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+3. Click **Save changes**.
