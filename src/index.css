@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Montserrat", serif;
+  background-image: radial-gradient(#3b3b3b 0.8px, #000000 0.8px);
+  background-size: 16px 16px;
+  color: white;
+}
